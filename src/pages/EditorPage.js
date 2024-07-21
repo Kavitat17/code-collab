@@ -3,6 +3,7 @@ import toast from 'react-hot-toast';
 import ACTIONS from '../Actions';
 import Client from '../components/Client';
 import Editor from '../components/Editor';
+import Output from '../components/Output';
 import { initSocket } from '../socket';
 import { createSubmission, getSubmissionResult } from '../api';
 import {
@@ -139,6 +140,58 @@ const EditorPage = () => {
         return <Navigate to="/" />;
     }
 
+    // return (
+    //     <div className="mainWrap">
+    //         <div className="aside">
+    //             <div className="asideInner">
+    //                 <div className="logo">
+    //                     <img
+    //                         className="logoImage"
+    //                         src="/code-sync.png"
+    //                         alt="logo"
+    //                     />
+    //                 </div>
+    //                 <h3>Connected</h3>
+    //                 <div className="clientsList">
+    //                     {clients.map((client) => (
+    //                         <Client
+    //                             key={client.socketId}
+    //                             username={client.username}
+    //                         /> //we are returning a component
+    //                     ))}
+    //                 </div>
+    //             </div>
+    //             <button className="btn copyBtn" onClick={copyRoomId}>
+    //                 Copy ROOM ID
+    //             </button>
+    //             <button className="btn leaveBtn" onClick={leaveRoom}>
+    //                 Leave
+    //             </button>
+    //             <button className="btn" onClick={executeCode} disabled={isSubmitting}>
+    //                 {isSubmitting ? 'Running...' : 'Run Code'}
+    //             </button>
+    //             {result && (
+    //                 <div className="result">
+    //                     <h3>Result:</h3>
+    //                     <pre>{atob(result.stdout || '')}</pre>
+    //                     <pre>{atob(result.stderr || '')}</pre>
+    //                     <pre>{result.exit_code === 0 ? 'Success' : 'Error'}</pre>
+    //                 </div>
+    //             )}
+    //         </div>
+    //         <div className="editorWrap">
+    //             <Editor
+    //                 socketRef={socketRef}
+    //                 roomId={roomId}
+    //                 onCodeChange={(code) => { //child component se ham parent component ko code pass kar rahe hai 
+    //                 //we do this function ki help se
+    //                     codeRef.current = code;
+    //                 }}
+    //             />
+    //         </div>
+    //     </div>
+    // );
+
     return (
         <div className="mainWrap">
             <div className="aside">
@@ -151,45 +204,52 @@ const EditorPage = () => {
                         />
                     </div>
                     <h3>Connected</h3>
-                    <div className="clientsList">
+                    <div className="clientList">
                         {clients.map((client) => (
                             <Client
                                 key={client.socketId}
                                 username={client.username}
-                            /> //we are returning a component
+                            />
                         ))}
                     </div>
                 </div>
-                <button className="btn copyBtn" onClick={copyRoomId}>
-                    Copy ROOM ID
-                </button>
-                <button className="btn leaveBtn" onClick={leaveRoom}>
-                    Leave
-                </button>
-                <button className="btn" onClick={executeCode} disabled={isSubmitting}>
-                    {isSubmitting ? 'Running...' : 'Run Code'}
-                </button>
-                {result && (
-                    <div className="result">
-                        <h3>Result:</h3>
-                        <pre>{atob(result.stdout || '')}</pre>
-                        <pre>{atob(result.stderr || '')}</pre>
-                        <pre>{result.exit_code === 0 ? 'Success' : 'Error'}</pre>
-                    </div>
-                )}
+                <div className="asideFooter">
+                    <button className="btn copyBtn" onClick={copyRoomId}>
+                        Copy ROOM ID
+                    </button>
+                    <button className="btn leaveBtn" onClick={leaveRoom}>
+                        Leave
+                    </button>
+                </div>
             </div>
             <div className="editorWrap">
-                <Editor
-                    socketRef={socketRef}
-                    roomId={roomId}
-                    onCodeChange={(code) => { //child component se ham parent component ko code pass kar rahe hai 
-                    //we do this function ki help se
-                        codeRef.current = code;
-                    }}
-                />
+                <div className="editorContainer">
+                    <Editor
+                        socketRef={socketRef}
+                        roomId={roomId}
+                        onCodeChange={(code) => { //child component se ham parent component ko code pass kar rahe hai 
+                        //we do this function ki help se
+                            codeRef.current = code;
+                        }}
+                    />
+                </div>
+                <div className="outputContainer">
+                    <button className="runCodeBtn" onClick={executeCode} disabled={isSubmitting}>
+                        {isSubmitting ? 'Running...' : 'Run Code'}
+                    </button>
+                    {result && (
+                        <div className="result">
+                            <h3>Result:</h3>
+                            <pre>{atob(result.stdout || '')}</pre>
+                            <pre>{atob(result.stderr || '')}</pre>
+                            <pre>{result.exit_code === 0 ? 'Success' : 'Error'}</pre>
+                        </div>
+                    )}
+                </div>
             </div>
         </div>
     );
+
 };
 
 export default EditorPage;

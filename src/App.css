@@ -83,11 +83,34 @@ footer{
   border-color: #368654;
 }
 
-/* EditorPage */
-.mainWrap{
+/* Editor Page Layout */
+.mainWrap {
   display: grid;
-  grid-template-columns: 230px 1fr;
+  grid-template-columns: 230px 1fr; 
+  height: 100vh;
 }
+
+
+.editorWrap {
+  display: flex;
+  flex-direction: column;
+  height: 100%; /* Adjust to fit the height properly */
+}
+
+.editorContainer {
+  flex: 2;
+  background: #282a36; /* Background color for the editor part */
+  overflow: hidden;
+}
+
+.outputContainer {
+  flex: 1;
+  background: #1c1e29; /* Background color for the output part */
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+}
+
 
 /* EditorPage */
 .aside{
@@ -96,11 +119,14 @@ footer{
   color: #fff;
   display: flex;
   flex-direction: column;
+  height: 100vh;
 }
 
 /* EditorPage */
 .asideInner {
   flex:1;
+  display: flex;
+  flex-direction: column;
 }
 
 /* EditorPage */
@@ -141,8 +167,47 @@ footer{
 
 /*editor*/
 .CodeMirror {
-  min-height: calc(100vh - 20px);
-  font-size: 20px;
+  height: 100%;
+  font-size: 16px;
   line-height: 1.6;
-  padding-top: 20px;
+}
+
+.asideFooter {
+  margin-top: auto; /* Pushes the footer to the bottom */
+  display: flex;
+  flex-direction: column;
+}
+
+
+.copyBtn {
+  /* background: #4aed88; */
+  margin-top: auto; /* Push to bottom */
+}
+
+.copyBtn:hover {
+  opacity: 0.9; /* Optional: change on hover */
+}
+
+
+
+.runCodeBtn {
+  background: #4aed88;
+  color: #fff;
+  border: none;
+  padding: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s ease-in-out;
+}
+
+.runCodeBtn:hover {
+  background: #2b824c;
+}
+
+/* Additional styling for results section */
+.result {
+  background: #1c1e29;
+  padding: 16px;
+  color: #fff;
+  overflow-y: auto;
 }
