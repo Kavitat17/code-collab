@@ -4,6 +4,7 @@ import ACTIONS from '../Actions';
 import Client from '../components/Client';
 import Editor from '../components/Editor';
 import { initSocket } from '../socket';
+import { createSubmission, getSubmissionResult } from '../api';
 import {
     useLocation,
     useNavigate,
@@ -19,6 +20,9 @@ const EditorPage = () => {
     const { roomId } = useParams();
     const reactNavigator = useNavigate();
     const [clients, setClients] = useState([]);
+
+    const [result, setResult] = useState(null); // State to store the result
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     function handleErrors(e) {
         console.log('socket error', e);
@@ -108,6 +112,29 @@ const EditorPage = () => {
         reactNavigator('/');
     }
 
+    //for execution and result
+    const executeCode = async () => {
+        setIsSubmitting(true);
+        try {
+            const submission = await createSubmission(codeRef.current);
+            const { token } = submission;
+
+            // Polling for the result
+            const intervalId = setInterval(async () => {
+                const result = await getSubmissionResult(token);
+                if (result.status.id >= 3) { // Status id 3 means it's completed
+                    setResult(result);
+                    clearInterval(intervalId);
+                    setIsSubmitting(false);
+                }
+            }, 1000); // Adjust polling interval as needed
+        } catch (error) {
+            toast.error('Error executing code');
+            console.error(error);
+            setIsSubmitting(false);
+        }
+    };
+
     if (!location.state) {
         return <Navigate to="/" />;
     }
@@ -139,6 +166,17 @@ const EditorPage = () => {
                 <button className="btn leaveBtn" onClick={leaveRoom}>
                     Leave
                 </button>
+                <button className="btn" onClick={executeCode} disabled={isSubmitting}>
+                    {isSubmitting ? 'Running...' : 'Run Code'}
+                </button>
+                {result && (
+                    <div className="result">
+                        <h3>Result:</h3>
+                        <pre>{atob(result.stdout || '')}</pre>
+                        <pre>{atob(result.stderr || '')}</pre>
+                        <pre>{result.exit_code === 0 ? 'Success' : 'Error'}</pre>
+                    </div>
+                )}
             </div>
             <div className="editorWrap">
                 <Editor
