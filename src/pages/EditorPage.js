@@ -51,6 +51,10 @@ const EditorPage = () => {
                     }
                     //pushing every joined client using setClient
                     setClients(clients);
+
+                    //when new client join uske code dikhna chahiye jo already bakione kiya hai 
+                    //for that we have sync if we don't do this when new client join use uske code editor pe kuch nahi dikhega jab kuch aur add nahi karte existing user like anything . , 
+                    //but hamara code to editor page ke andar nahi hai wo editor me hai for that we use useRef 
                     socketRef.current.emit(ACTIONS.SYNC_CODE, {
                         code: codeRef.current,
                         socketId,
@@ -133,7 +137,8 @@ const EditorPage = () => {
                 <Editor
                     socketRef={socketRef}
                     roomId={roomId}
-                    onCodeChange={(code) => {
+                    onCodeChange={(code) => { //child component se ham parent component ko code pass kar rahe hai 
+                    //we do this function ki help se
                         codeRef.current = code;
                     }}
                 />

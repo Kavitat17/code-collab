@@ -33,7 +33,7 @@ const Editor = ({ socketRef, roomId, onCodeChange }) => {
                 const { origin } = changes; //in origin we gat value like cut paste or add setvalue basically what we have done in editor
                 const code = instance.getValue();
                 console.log(code);
-                onCodeChange(code);
+                onCodeChange(code); // jaise hi koi code type karega wo code update hoga
                 if (origin !== 'setValue') {
                     socketRef.current.emit(ACTIONS.CODE_CHANGE, {
                         roomId,

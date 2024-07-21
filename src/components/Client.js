@@ -8,7 +8,7 @@ const Client = ({username}) => {
             <span className="userName">{username}</span> 
             {/* displaying received username */}
         </div>
-    )
-}
+    );
+};
 
 export default Client;

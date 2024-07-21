@@ -1,5 +1,6 @@
 import { io } from 'socket.io-client';
 
+//socket ko initialize karne ka kam yaha karenge
 // this function is giving us client ka socket instance
 export const initSocket = async () => {
     // hamare socket connection ke options
