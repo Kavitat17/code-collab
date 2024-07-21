@@ -14,80 +14,87 @@ import {
 const EditorPage = () => {
     //initialization and storing ref banake of that socket connection
     const socketRef = useRef(null);
-    const codeRef = useRef(null);
+    const codeRef = useRef('');
     const location = useLocation();
     const { roomId } = useParams();
     const reactNavigator = useNavigate();
     const [clients, setClients] = useState([]);
 
+    function handleErrors(e) {
+        console.log('socket error', e);
+        toast.error('Socket connection failed, try again later.');
+        reactNavigator('/');
+    }
+
     //intialization
     useEffect(() => {
         const init = async () => {
-            socketRef.current = await initSocket();
-            //to handle error
-            socketRef.current.on('connect_error', (err) => handleErrors(err));
-            socketRef.current.on('connect_failed', (err) => handleErrors(err));
+            try{
+                socketRef.current = await initSocket();
+                //to handle error
+                socketRef.current.on('connect_error', (err) => handleErrors(err));
+                socketRef.current.on('connect_failed', (err) => handleErrors(err));
 
-            function handleErrors(e) {
-                console.log('socket error', e);
-                toast.error('Socket connection failed, try again later.');
-                reactNavigator('/');
-            }
+                //join wala is optional for like roomid send karne ke liye we are using it
+                socketRef.current.emit(ACTIONS.JOIN, {
+                    roomId,
+                    username: location.state?.username, //jaise hi hamara socket init ho jata hai uske bad hame server pe ek event bhejni hai
+                });
+                //event hogi hamari join event 
 
-            //join wala is optional for like roomid send karne ke liye we are using it
-            socketRef.current.emit(ACTIONS.JOIN, {
-                roomId,
-                username: location.state?.username, //jaise hi hamara socket init ho jata hai uske bad hame server pe ek event bhejni hai
-            });
-            //event hogi hamari join event 
+                // Listening for joined event
+                socketRef.current.on(
+                    ACTIONS.JOINED, //and callback function
+                    ({ clients, username, socketId }) => {
+                        if (username !== location.state?.username) { //mujhe chodke baki sabko notify karna hai ki i am joined
+                            toast.success(`${username} joined the room.`);
+                            console.log(`${username} joined`);
+                        }
+                        //pushing every joined client using setClient
+                        setClients(clients);
 
-            // Listening for joined event
-            socketRef.current.on(
-                ACTIONS.JOINED, //and callback function
-                ({ clients, username, socketId }) => {
-                    if (username !== location.state?.username) { //mujhe chodke baki sabko notify karna hai ki i am joined
-                        toast.success(`${username} joined the room.`);
-                        console.log(`${username} joined`);
+                        //when new client join uske code dikhna chahiye jo already bakione kiya hai 
+                        //for that we have sync if we don't do this when new client join use uske code editor pe kuch nahi dikhega jab kuch aur add nahi karte existing user like anything . , 
+                        //but hamara code to editor page ke andar nahi hai wo editor me hai for that we use useRef 
+                        socketRef.current.emit(ACTIONS.SYNC_CODE, {
+                            code: codeRef.current,
+                            socketId,
+                        });
                     }
-                    //pushing every joined client using setClient
-                    setClients(clients);
+                );
 
-                    //when new client join uske code dikhna chahiye jo already bakione kiya hai 
-                    //for that we have sync if we don't do this when new client join use uske code editor pe kuch nahi dikhega jab kuch aur add nahi karte existing user like anything . , 
-                    //but hamara code to editor page ke andar nahi hai wo editor me hai for that we use useRef 
-                    socketRef.current.emit(ACTIONS.SYNC_CODE, {
-                        code: codeRef.current,
-                        socketId,
-                    });
-                }
-            );
-
-            // Listening for disconnected
-            socketRef.current.on(
-                ACTIONS.DISCONNECTED,
-                ({ socketId, username }) => {
-                    toast.success(`${username} left the room.`);
-                    //jo nikal gaye unhe state se bhi nikalana current list
-                    setClients((prev) => {
-                        return prev.filter(
-                            (client) => client.socketId !== socketId
-                        );
-                    });
-                }
-            );
+                // Listening for disconnected
+                socketRef.current.on(
+                    ACTIONS.DISCONNECTED,
+                    ({ socketId, username }) => {
+                        toast.success(`${username} left the room.`);
+                        //jo nikal gaye unhe state se bhi nikalana current list
+                        setClients((prev) => {
+                            return prev.filter(
+                                (client) => client.socketId !== socketId
+                            );
+                        });
+                    }
+                );
+            } catch (error) {
+                handleErrors(error);
+            }
         };
         init();
 
         //we have used many listeners like .on so clean that
         return () => {
             //cleaning functions
-            socketRef.current.disconnect();
-            socketRef.current.off(ACTIONS.JOINED);
-            socketRef.current.off(ACTIONS.DISCONNECTED);
+            if(socketRef.current){
+                socketRef.current.disconnect();
+                socketRef.current.off(ACTIONS.JOINED);
+                socketRef.current.off(ACTIONS.DISCONNECTED);
+            }
+            
         };
-    }, []); //empty array nahi diya har ek render pe ye useEffect call hoga
+    }, [location.state?.username, reactNavigator, roomId]); //empty array nahi diya har ek render pe ye useEffect call hoga
 
-    async function copyRoomId() {
+    const copyRoomId = async () => {
         try {
             await navigator.clipboard.writeText(roomId);
             toast.success('Room ID has been copied to your clipboard');

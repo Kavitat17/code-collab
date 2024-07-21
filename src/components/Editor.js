@@ -46,18 +46,36 @@ const Editor = ({ socketRef, roomId, onCodeChange }) => {
         init();
     }, []);
 
+    // useEffect(() => {
+    //     if (socketRef.current) {
+    //         socketRef.current.on(ACTIONS.CODE_CHANGE, ({ code }) => {
+    //             console.log('receiving',code);
+    //             if (code !== null) {
+    //                 editorRef.current.setValue(code);
+    //             }
+    //         });
+    //     }
+
+    //     return () => {
+    //         socketRef.current.off(ACTIONS.CODE_CHANGE);
+    //     };
+    // }, [socketRef.current]);
+
     useEffect(() => {
+        const handleCodeChange = ({ code }) => {
+            if (code !== null && editorRef.current) {
+                editorRef.current.setValue(code);
+            }
+        };
+
         if (socketRef.current) {
-            socketRef.current.on(ACTIONS.CODE_CHANGE, ({ code }) => {
-                console.log('receiving',code);
-                if (code !== null) {
-                    editorRef.current.setValue(code);
-                }
-            });
+            socketRef.current.on(ACTIONS.CODE_CHANGE, handleCodeChange);
         }
 
         return () => {
-            socketRef.current.off(ACTIONS.CODE_CHANGE);
+            if (socketRef.current) {
+                socketRef.current.off(ACTIONS.CODE_CHANGE, handleCodeChange);
+            }
         };
     }, [socketRef.current]);
 
