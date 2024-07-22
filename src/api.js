@@ -4,14 +4,14 @@ import axios from 'axios';
 const API_URL = process.env.REACT_APP_JUDGE0_API_URL;
 const API_KEY = process.env.REACT_APP_JUDGE0_API_KEY;
 
-console.log('API_URL:', API_URL);
-console.log('API_KEY:', API_KEY);
+// console.log('API_URL:', API_URL);
+// console.log('API_KEY:', API_KEY);
 
 // Create a new submission
 export const createSubmission = async (sourceCode) => {
     console.log("api for submission called");
     try {
-    const response = await axios.post(`${API_URL}/submissions`, {
+      const response = await axios.post(`${API_URL}/submissions`, {
       language_id: 63, // For JavaScript, which is 63 in Judge0
       source_code: btoa(sourceCode), // Encode source code in base64
       stdin: '', // Optional input for the code

@@ -27,7 +27,9 @@ const EditorPage = () => {
 
     const [messages, setMessages] = useState([]);
     const [newMessage, setNewMessage] = useState('');
-    const [isChatMinimized, setIsChatMinimized] = useState(false);
+    const [isChatMinimized, setIsChatMinimized] = useState(true);
+
+    const [userInput, setUserInput] = useState(''); // State for user input
 
 
     function handleErrors(e) {
@@ -134,7 +136,9 @@ const EditorPage = () => {
     const executeCode = async () => {
         setIsSubmitting(true);
         try {
-            const submission = await createSubmission(codeRef.current);
+            // Replace the prompt call with the injected user input
+            const codeWithoutPrompt = codeRef.current.replace(/prompt\(".*?"\)/g, JSON.stringify(userInput));
+            const submission = await createSubmission(codeWithoutPrompt);
             const { token } = submission;
 
             // Polling for the result
@@ -255,23 +259,30 @@ const EditorPage = () => {
                     />
                 </div>
                 <div className="outputContainer">
-                <div className="buttonContainer">
-                        <button className="runCodeBtn" onClick={executeCode} disabled={isSubmitting}>
-                            {isSubmitting ? 'Running...' : 'Run Code'}
-                        </button>
-                        <button className="downloadBtn" onClick={handleDownload}>
-                            Download Code
-                        </button>
+                    <div className="inputSection">
+                        <textarea
+                            placeholder="Enter input for your code here..."
+                            value={userInput}
+                            onChange={(e) => setUserInput(e.target.value)}
+                        ></textarea>
                     </div>
-                    {result && (
-                        <div className="result">
-                            <h3>Result:</h3>
-                            <pre>{atob(result.stdout || '')}</pre>
-                            <pre>{atob(result.stderr || '')}</pre>
-                            <pre>{result.exit_code === 0 ? 'Success' : 'Error'}</pre>
+                    <div className="buttonContainer">
+                            <button className="runCodeBtn" onClick={executeCode} disabled={isSubmitting}>
+                                {isSubmitting ? 'Running...' : 'Run Code'}
+                            </button>
+                            <button className="downloadBtn" onClick={handleDownload}>
+                                Download Code
+                            </button>
                         </div>
-                    )}
-                </div>
+                        {result && (
+                            <div className="result">
+                                <h3>Result:</h3>
+                                <pre>{atob(result.stdout || '')}</pre>
+                                <pre>{atob(result.stderr || '')}</pre>
+                                <pre>{result.exit_code === 0 ? 'Success' : 'Error'}</pre>
+                            </div>
+                        )}
+                    </div>
             </div>
         </div>
     );
