@@ -4,6 +4,7 @@ import ACTIONS from '../Actions';
 import Client from '../components/Client';
 import Editor from '../components/Editor';
 import { initSocket } from '../socket';
+import { downloadFile } from '../Download';
 import { createSubmission, getSubmissionResult } from '../api';
 import {
     useLocation,
@@ -135,6 +136,17 @@ const EditorPage = () => {
         }
     };
 
+    const handleDownload = () => {
+        try {
+            const content = codeRef.current; // Retrieve content from the editor
+            downloadFile(content, 'code.txt'); // Call downloadFile with content and filename
+            toast.success('Code downloaded successfully');
+        } catch (error) {
+            toast.error('Error downloading code');
+            console.error(error);
+        }
+    };
+
     if (!location.state) {
         return <Navigate to="/" />;
     }
@@ -146,7 +158,7 @@ const EditorPage = () => {
                     <div className="logo">
                         <img
                             className="logoImage"
-                            src="/code-sync.png"
+                            src="/logo.png"
                             alt="logo"
                         />
                     </div>
@@ -181,9 +193,14 @@ const EditorPage = () => {
                     />
                 </div>
                 <div className="outputContainer">
-                    <button className="runCodeBtn" onClick={executeCode} disabled={isSubmitting}>
-                        {isSubmitting ? 'Running...' : 'Run Code'}
-                    </button>
+                <div className="buttonContainer">
+                        <button className="runCodeBtn" onClick={executeCode} disabled={isSubmitting}>
+                            {isSubmitting ? 'Running...' : 'Run Code'}
+                        </button>
+                        <button className="downloadBtn" onClick={handleDownload}>
+                            Download Code
+                        </button>
+                    </div>
                     {result && (
                         <div className="result">
                             <h3>Result:</h3>

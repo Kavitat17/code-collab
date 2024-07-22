@@ -101,6 +101,7 @@ footer{
   flex: 2;
   background: #282a36; /* Background color for the editor part */
   overflow: hidden;
+  height: 100%;
 }
 
 .outputContainer {
@@ -190,7 +191,15 @@ footer{
 
 
 
-.runCodeBtn {
+.buttonContainer {
+  display: flex;
+  justify-content: space-between; /* Space between buttons */
+  width: 100%;
+  padding: 10px;
+}
+
+/* Style the run code and download buttons */
+.runCodeBtn, .downloadBtn {
   background: #4aed88;
   color: #fff;
   border: none;
@@ -198,11 +207,14 @@ footer{
   border-radius: 5px;
   cursor: pointer;
   transition: background 0.3s ease-in-out;
+  flex: 1; /* Each button takes up half the space */
+  margin: 0 5px; /* Space between buttons */
 }
 
-.runCodeBtn:hover {
+.runCodeBtn:hover, .downloadBtn:hover {
   background: #2b824c;
 }
+
 
 /* Additional styling for results section */
 .result {
