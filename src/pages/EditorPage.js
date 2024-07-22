@@ -190,6 +190,103 @@ const EditorPage = () => {
         return <Navigate to="/" />;
     }
 
+    // return (
+    //     <div className="mainWrap">
+    //         <div className="aside">
+    //             <div className="asideInner">
+    //                 <div className="logo">
+    //                     <img
+    //                         className="logoImage"
+    //                         src="/logo.png"
+    //                         alt="logo"
+    //                     />
+    //                 </div>
+    //                 <h3>Connected</h3>
+    //                 <div className="clientList">
+    //                     {clients.map((client) => (
+    //                         <Client
+    //                             key={client.socketId}
+    //                             username={client.username}
+    //                         />
+    //                     ))}
+    //                 </div>
+                    
+    //                 {/* chat section */}
+    //                 <div className={`chatContainer ${isChatMinimized ? 'minimized' : ''}`}>
+    //                     <div className='chatMessages'>
+    //                         {messages.map((msg, index) => (
+    //                             <div key={index} className="chatMessage">
+    //                                 <strong>{msg.username}:</strong> {msg.message}
+    //                             </div>
+    //                         ))}
+    //                     </div>
+    //                     {!isChatMinimized && (
+    //                         <div className='chatInput'>
+    //                             <input
+    //                                 type="text"
+    //                                 value={newMessage}
+    //                                 onChange={(e) => setNewMessage(e.target.value)}
+    //                                 placeholder="Type a message..."
+    //                             />
+    //                             <button onClick={handleSendMessage}>Send</button>
+    //                         </div>
+    //                     )}
+    //                     <div className="chatToggle" onClick={toggleChat}>
+    //                         {isChatMinimized ? 'Expand Chat' : 'Minimize Chat'}
+    //                     </div>
+    //                 </div>
+    //             </div>
+
+    //             {/* footer */}
+    //             <div className="asideFooter">
+    //                 <button className="btn copyBtn" onClick={copyRoomId}>
+    //                     Copy ROOM ID
+    //                 </button>
+    //                 <button className="btn leaveBtn" onClick={leaveRoom}>
+    //                     Leave
+    //                 </button>
+    //             </div>
+    //         </div>
+    //         <div className="editorWrap">
+    //             <div className="editorContainer">
+    //                 <Editor
+    //                     socketRef={socketRef}
+    //                     roomId={roomId}
+    //                     onCodeChange={(code) => { //child component se ham parent component ko code pass kar rahe hai 
+    //                     //we do this function ki help se
+    //                         codeRef.current = code;
+    //                     }}
+    //                 />
+    //             </div>
+    //             <div className="outputContainer">
+    //                 <div className="inputSection">
+    //                     <textarea
+    //                         placeholder="Enter input for your code here..."
+    //                         value={userInput}
+    //                         onChange={(e) => setUserInput(e.target.value)}
+    //                     ></textarea>
+    //                 </div>
+    //                 <div className="buttonContainer">
+    //                         <button className="runCodeBtn" onClick={executeCode} disabled={isSubmitting}>
+    //                             {isSubmitting ? 'Running...' : 'Run Code'}
+    //                         </button>
+    //                         <button className="downloadBtn" onClick={handleDownload}>
+    //                             Download Code
+    //                         </button>
+    //                     </div>
+    //                     {result && (
+    //                         <div className="result">
+    //                             <h3>Result:</h3>
+    //                             <pre>{atob(result.stdout || '')}</pre>
+    //                             <pre>{atob(result.stderr || '')}</pre>
+    //                             <pre>{result.exit_code === 0 ? 'Success' : 'Error'}</pre>
+    //                         </div>
+    //                     )}
+    //                 </div>
+    //         </div>
+    //     </div>
+    // );
+
     return (
         <div className="mainWrap">
             <div className="aside">
@@ -210,7 +307,7 @@ const EditorPage = () => {
                             />
                         ))}
                     </div>
-                    
+    
                     {/* chat section */}
                     <div className={`chatContainer ${isChatMinimized ? 'minimized' : ''}`}>
                         <div className='chatMessages'>
@@ -236,7 +333,7 @@ const EditorPage = () => {
                         </div>
                     </div>
                 </div>
-
+    
                 {/* footer */}
                 <div className="asideFooter">
                     <button className="btn copyBtn" onClick={copyRoomId}>
@@ -252,40 +349,44 @@ const EditorPage = () => {
                     <Editor
                         socketRef={socketRef}
                         roomId={roomId}
-                        onCodeChange={(code) => { //child component se ham parent component ko code pass kar rahe hai 
-                        //we do this function ki help se
+                        onCodeChange={(code) => {
                             codeRef.current = code;
                         }}
                     />
                 </div>
-                <div className="outputContainer">
-                    <div className="inputSection">
-                        <textarea
-                            placeholder="Enter input for your code here..."
-                            value={userInput}
-                            onChange={(e) => setUserInput(e.target.value)}
-                        ></textarea>
-                    </div>
+                <div className="outputSection">
                     <div className="buttonContainer">
-                            <button className="runCodeBtn" onClick={executeCode} disabled={isSubmitting}>
-                                {isSubmitting ? 'Running...' : 'Run Code'}
-                            </button>
-                            <button className="downloadBtn" onClick={handleDownload}>
-                                Download Code
-                            </button>
-                        </div>
-                        {result && (
-                            <div className="result">
-                                <h3>Result:</h3>
-                                <pre>{atob(result.stdout || '')}</pre>
-                                <pre>{atob(result.stderr || '')}</pre>
-                                <pre>{result.exit_code === 0 ? 'Success' : 'Error'}</pre>
-                            </div>
-                        )}
+                        <button className="runCodeBtn" onClick={executeCode} disabled={isSubmitting}>
+                            {isSubmitting ? 'Running...' : 'Run Code'}
+                        </button>
+                        <button className="downloadBtn" onClick={handleDownload}>
+                            Download Code
+                        </button>
                     </div>
+                    <div className="outputContent">
+                        <div className="inputSection">
+                            <textarea
+                                placeholder="Enter input for your code here..."
+                                value={userInput}
+                                onChange={(e) => setUserInput(e.target.value)}
+                            ></textarea>
+                        </div>
+                        <div className="result">
+                        <h5 className="resultHeader">Output</h5>
+                            {result && (
+                                <>
+                                    <pre>{atob(result.stdout || '')}</pre>
+                                    <pre>{atob(result.stderr || '')}</pre>
+                                    <pre>{result.exit_code === 0 ? 'Success' : 'Error'}</pre>
+                                </>
+                            )}
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     );
+    
 
 };
 
