@@ -25,6 +25,11 @@ const EditorPage = () => {
     const [result, setResult] = useState(null); // State to store the result
     const [isSubmitting, setIsSubmitting] = useState(false);
 
+    const [messages, setMessages] = useState([]);
+    const [newMessage, setNewMessage] = useState('');
+    const [isChatMinimized, setIsChatMinimized] = useState(false);
+
+
     function handleErrors(e) {
         console.log('socket error', e);
         toast.error('Socket connection failed, try again later.');
@@ -81,6 +86,17 @@ const EditorPage = () => {
                         });
                     }
                 );
+
+                // Handle incoming chat messages
+                socketRef.current.on(ACTIONS.CHAT_MESSAGE, ({ message, username }) => {
+                    setMessages((prev) => 
+                        [...prev, 
+                            { message, username }
+                        ]
+                    );
+                    toast.success(`${username}: messeged`);
+                });
+
             } catch (error) {
                 handleErrors(error);
             }
@@ -94,6 +110,7 @@ const EditorPage = () => {
                 socketRef.current.disconnect();
                 socketRef.current.off(ACTIONS.JOINED);
                 socketRef.current.off(ACTIONS.DISCONNECTED);
+                socketRef.current.off(ACTIONS.CHAT_MESSAGE);
             }
             
         };
@@ -147,6 +164,24 @@ const EditorPage = () => {
         }
     };
 
+    const handleSendMessage = () => {
+        console.log("Sending message:", newMessage);
+        if (newMessage.trim()) {
+            socketRef.current.emit(ACTIONS.CHAT_MESSAGE, { 
+                roomId, 
+                message: newMessage, 
+                username: location.state?.username 
+            });
+            console.log("Message emitted");
+            setNewMessage('');
+        }
+    };
+
+    const toggleChat = () => {
+        setIsChatMinimized(!isChatMinimized);
+    };
+    
+
     if (!location.state) {
         return <Navigate to="/" />;
     }
@@ -171,7 +206,34 @@ const EditorPage = () => {
                             />
                         ))}
                     </div>
+                    
+                    {/* chat section */}
+                    <div className={`chatContainer ${isChatMinimized ? 'minimized' : ''}`}>
+                        <div className='chatMessages'>
+                            {messages.map((msg, index) => (
+                                <div key={index} className="chatMessage">
+                                    <strong>{msg.username}:</strong> {msg.message}
+                                </div>
+                            ))}
+                        </div>
+                        {!isChatMinimized && (
+                            <div className='chatInput'>
+                                <input
+                                    type="text"
+                                    value={newMessage}
+                                    onChange={(e) => setNewMessage(e.target.value)}
+                                    placeholder="Type a message..."
+                                />
+                                <button onClick={handleSendMessage}>Send</button>
+                            </div>
+                        )}
+                        <div className="chatToggle" onClick={toggleChat}>
+                            {isChatMinimized ? 'Expand Chat' : 'Minimize Chat'}
+                        </div>
+                    </div>
                 </div>
+
+                {/* footer */}
                 <div className="asideFooter">
                     <button className="btn copyBtn" onClick={copyRoomId}>
                         Copy ROOM ID

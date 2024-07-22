@@ -56,6 +56,7 @@ io.on('connection', (socket) => {
         });
     });
 
+    //broadcasting things like code change chat etc
     socket.on(ACTIONS.CODE_CHANGE, ({ roomId, code }) => {
         console.log("receiving code",code);
         socket.in(roomId).emit(ACTIONS.CODE_CHANGE, { code }); //it means broadcasting i.e mujhe chodke sabko ye bhejo
@@ -67,6 +68,12 @@ io.on('connection', (socket) => {
     socket.on(ACTIONS.SYNC_CODE, ({ socketId, code }) => {
         io.to(socketId).emit(ACTIONS.CODE_CHANGE, { code });
     });
+
+    socket.on(ACTIONS.CHAT_MESSAGE, ({ roomId, message, username }) => {
+        io.to(roomId).emit(ACTIONS.CHAT_MESSAGE, { message, username });
+    });
+
+       
 
     socket.on('disconnecting', () => {
         const rooms = [...socket.rooms]; //sare rooms ko map se array me

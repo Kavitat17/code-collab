@@ -163,7 +163,7 @@ footer{
 
 .leaveBtn {
   width: 100%;
-  margin-top: 20px;
+  margin-top: 5px;
 }
 
 /*editor*/
@@ -222,4 +222,81 @@ footer{
   padding: 16px;
   color: #fff;
   overflow-y: auto;
+}
+
+.chatContainer {
+  display: flex;
+  flex-direction: column;
+  margin-top: 10px;
+  background: #333;
+  padding: 10px;
+  border-radius: 5px;
+  height: calc(100% - 60px); /* Adjust to fit the sidebar height */
+  overflow: hidden;
+  position: relative;
+  margin-bottom: 5px;
+}
+
+.chatMessages {
+  flex: 1;
+  overflow-y: auto;
+  margin-bottom: 10px;
+}
+
+.chatMessage {
+  padding: 5px;
+  margin-bottom: 10px;
+}
+
+.chatMessage strong {
+  color: #007bff;
+}
+
+.chatInput {
+  display: flex;
+}
+
+.chatInput input {
+  flex: 1;
+  padding: 5px;
+  border-radius: 5px;
+  border: none;
+  outline: none; /* Ensure padding and border are included in element's total width and height */
+  max-width: calc(100% - 80px);
+}
+
+.chatInput button { 
+  border: none;
+  border-radius: 5px;
+  background: #007bff;
+  color: #fff;
+  cursor: pointer;
+  font-size: 14px;
+  margin-left: 5px; 
+  box-sizing: border-box; 
+  position: relative;
+  max-width: calc(100% - 80px);
+}
+
+.chatToggle {
+  cursor: pointer;
+  color: #007bff;
+  text-align: center;
+  width: 100%;
+  text-align: center;
+}
+
+.chatInput button:hover {
+  background: #0056b3;
+}
+.chatContainer.minimized {
+  height: 50px; /* Adjust based on preference */
+  overflow: hidden;
+  position: relative;
+}
+
+
+
+.chatToggle {
+  border-top: 1px solid #ddd;
 }
