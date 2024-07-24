@@ -82,13 +82,13 @@ const Home = () => {
             </div> 
 
             <footer>
-            Developed By <a 
+            Developed By Kavita Thete <a 
                     href="https://www.linkedin.com/in/kavitathete/" 
                     target="_blank" 
                     rel="noopener noreferrer" 
                     className="linkedin-link"
                 >
-                    Kavita Thete <i className="fab fa-linkedin"></i>
+                     <i className="fab fa-linkedin"></i>
                 </a>
             </footer>
         </div>
