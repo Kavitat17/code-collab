@@ -14,3 +14,7 @@
 - **Backend**: Node.js, Express
 - **Real-Time Communication**: WebSockets
 - **Code Execution**: Judge0 API
+
+  
+![Screenshot 2024-07-24 153236](https://github.com/user-attachments/assets/d04fcae4-d196-4fa9-b646-bee396cd33bc)
+![Screenshot 2024-07-24 153549](https://github.com/user-attachments/assets/0187fab3-143c-4ea0-82af-e93bc054fc94)
