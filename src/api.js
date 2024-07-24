@@ -24,7 +24,7 @@ const LANGUAGE_IDS = {
 };
 
 // Create a new submission
-export const createSubmission = async (sourceCode, language) => {
+export const createSubmission = async (sourceCode, language, userInput) => {
     console.log("api for submission called");
     try {
       console.log(`Requested Language: ${language}`) ;
@@ -36,7 +36,7 @@ export const createSubmission = async (sourceCode, language) => {
       const response = await axios.post(`${API_URL}/submissions`, {
       language_id: languageId, // For JavaScript, which is 63 in Judge0
       source_code: btoa(sourceCode), // Encode source code in base64
-      stdin: '', // Optional input for the code
+      stdin: btoa(userInput), // Optional input for the code
     }, {
       params: {
         base64_encoded: 'true',

@@ -133,9 +133,10 @@ const EditorPage = () => {
         setIsSubmitting(true);
         try {
             // Replace the prompt call with the injected user input
+            console.log('User Input:', userInput);
             const codeWithoutPrompt = codeRef.current.replace(/prompt\(".*?"\)/g, JSON.stringify(userInput));
             console.log('Executing code:', codeWithoutPrompt, 'Language:', language);
-            const submission = await createSubmission(codeWithoutPrompt,language);
+            const submission = await createSubmission(codeWithoutPrompt,language, userInput);
             const { token } = submission;
 
             // Polling for the result

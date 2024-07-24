@@ -13,7 +13,7 @@ const modes = {
     javascript: 'javascript',
     python: 'python',
     cpp: 'text/x-c++src',
-    java: 'text/x-java',
+    java: 'text/x-csrc',
     c: 'text/x-csrc',
     csharp: 'text/x-csharp',
     clojure: 'text/x-clojure',
@@ -31,3 +31,4 @@ export const loadMode = (language) => {
     }
     return mode;
 };
+
