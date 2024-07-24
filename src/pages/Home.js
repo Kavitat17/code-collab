@@ -82,7 +82,7 @@ const Home = () => {
             </div> 
 
             <footer>
-                Built By <a 
+            Developed By <a 
                     href="https://www.linkedin.com/in/kavitathete/" 
                     target="_blank" 
                     rel="noopener noreferrer" 
