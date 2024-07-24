@@ -81,7 +81,16 @@ const Home = () => {
                 </div>
             </div> 
 
-            <footer>Built By Kavita Thete</footer>
+            <footer>
+                Built By <a 
+                    href="https://www.linkedin.com/in/kavitathete/" 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    className="linkedin-link"
+                >
+                    Kavita Thete <i className="fab fa-linkedin"></i>
+                </a>
+            </footer>
         </div>
     );
 };

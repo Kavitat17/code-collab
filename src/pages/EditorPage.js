@@ -261,7 +261,6 @@ const EditorPage = () => {
                         <option value="c">C</option>
                         <option value="cpp">C++</option>
                         <option value="csharp">C#</option>
-                        <option value="clojure">Clojure</option>
                         <option value="java">Java</option>
                         <option value="javascript">JavaScript</option>
                         <option value="go">Go</option>
