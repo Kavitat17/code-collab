@@ -1,0 +1,15 @@
+version: 1
+backend:
+  phases:
+    build:
+      commands:
+        - npm install
+        - npm run server:prod
+  artifacts:
+    baseDirectory: . # No specific build directory
+    files:
+      - '**/*'
+  cache:
+    paths:
+      - node_modules/**/*
+
