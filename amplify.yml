@@ -6,10 +6,24 @@ backend:
         - npm install
         - npm run server:prod
   artifacts:
-    baseDirectory: . # No specific build directory
+    baseDirectory: .
     files:
-      - '**/*'
+      - "**/*"
   cache:
     paths:
       - node_modules/**/*
-
+frontend:
+  phases:
+    preBuild:
+      commands:
+        - npm ci --cache .npm --prefer-offline
+    build:
+      commands:
+        - npm run build
+  artifacts:
+    baseDirectory: build
+    files:
+      - "**/*"
+  cache:
+    paths:
+      - .npm/**/*
