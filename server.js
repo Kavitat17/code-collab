@@ -13,6 +13,7 @@ const io = new Server(server,{
 });
 
 app.use(express.static('build'));
+//if we only use this we get error after refresh in build
 app.use((req, res, next) => {
     res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
