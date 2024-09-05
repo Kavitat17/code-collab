@@ -12,6 +12,13 @@ const io = new Server(server,{
     },
 });
 
+app.use(express.static(path.join(__dirname, 'build')));
+
+// Serve the React app for any other route
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'build', 'index.html'));
+});
+
 // app.use(express.static('build'));
 // //if we only use this we get error after refresh in build
 // app.use((req, res, next) => {
