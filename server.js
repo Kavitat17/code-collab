@@ -67,7 +67,7 @@ io.on('connection', (socket) => {
     //broadcasting things like code change chat etc
     socket.on(ACTIONS.CODE_CHANGE, ({ roomId, code }) => {
         // console.log("receiving code",code);
-        socket.in(roomId).emit(ACTIONS.CODE_CHANGE, { code }); //it means broadcasting i.e mujhe chodke sabko ye bhejo
+        socket.to(roomId).emit(ACTIONS.CODE_CHANGE, { code }); //it means broadcasting i.e mujhe chodke sabko ye bhejo
         //if we use same but insted of socket.in we use io.to then cursor ulta jata hai
         //like wo jaise hi type karge wo server pe jayega nd server se use sam etext milega uski vajah se jo bhi uske code code editor me hai wo 
         //override ho jayega and cursor jo hai wo set hoke firse starting pe aayega
